@@ -1,0 +1,1 @@
+from dqt.decorators.dq_test_decorator import dq_test

@@ -1,0 +1,47 @@
+version: 1.0.0
+kind: DataContract
+apiVersion: v3.2.0
+id: customers-quality
+name: customers
+tenant: example
+domain: sales
+description:
+  purpose: Demonstrate contract-driven data quality with DQT.
+
+schema:
+  - name: customers
+    physicalName: customers
+    quality:
+      - id: customer_email_not_null
+        type: custom
+        engine: dqt
+        implementation: quality.not_null
+        description: Every customer needs an email address.
+        dimension: completeness
+        severity: error
+        customProperties:
+          - property: column
+            value: email
+          - property: maximum_accepted_error_percentage
+            value: 0
+    properties:
+      - name: id
+        logicalType: integer
+        primaryKey: true
+      - name: email
+        logicalType: string
+      - name: age
+        logicalType: integer
+        quality:
+          - id: customer_age_positive
+            type: custom
+            engine: dqt
+            implementation: quality.positive
+            description: Age must be positive when present.
+            dimension: accuracy
+            severity: error
+            customProperties:
+              - property: column
+                value: age
+              - property: maximum_accepted_error_percentage
+                value: 0
