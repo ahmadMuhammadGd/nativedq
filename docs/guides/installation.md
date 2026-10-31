@@ -16,13 +16,13 @@ uv sync
 ```
 
 This creates `.venv`, installs both workspace members in editable mode
-(`dqt` and `dqt-executor-spark35`), and installs the default `dev` dependency
+(`nativedq` and `nativedq-executor-spark35`), and installs the default `dev` dependency
 group. No package needs to be built or installed manually for development.
 
 Verify the environment:
 
 ```bash
-uv run python -c "import dqt; from dqt.runtime.loaders import discover_executors; print(list(discover_executors()))"
+uv run python -c "import nativedq; from nativedq.runtime.loaders import discover_executors; print(list(discover_executors()))"
 ```
 
 Expected output for the full workspace: `['spark35']`.
@@ -33,20 +33,20 @@ The core deliberately installs without an execution engine. Install a built
 wheel:
 
 ```bash
-uv build --package dqt
-python -m pip install dist/dqt-0.1.0-py3-none-any.whl
+uv build --package nativedq
+python -m pip install dist/nativedq-0.1.0-py3-none-any.whl
 ```
 
 Or install the package directory directly:
 
 ```bash
-python -m pip install ./packages/dqt-core
+python -m pip install ./packages/nativedq-core
 ```
 
 Check that the core is usable and that no executor is discovered:
 
 ```bash
-python -c "import dqt, dqt.odcs; from dqt.runtime.loaders import discover_executors; print(discover_executors())"
+python -c "import nativedq, nativedq.odcs; from nativedq.runtime.loaders import discover_executors; print(discover_executors())"
 ```
 
 Expected: `{}`.
@@ -56,39 +56,39 @@ The core's runtime dependencies are `jsonschema`, `open-data-contract-standard`
 
 ## Installing the Spark adapter
 
-The adapter depends on `dqt>=0.1,<0.2` and `pyspark>=3.5,<3.6`:
+The adapter depends on `nativedq>=0.1,<0.2` and `pyspark>=3.5,<3.6`:
 
 ```bash
-uv build --package dqt-executor-spark35
-python -m pip install dist/dqt_executor_spark35-0.1.0-py3-none-any.whl
+uv build --package nativedq-executor-spark35
+python -m pip install dist/nativedq_executor_spark35-0.1.0-py3-none-any.whl
 ```
 
 When installing from built wheels, install the core wheel first so the
-adapter's `dqt` requirement is satisfied by the local package rather than by an
+adapter's `nativedq` requirement is satisfied by the local package rather than by an
 index lookup:
 
 ```bash
-python -m pip install dist/dqt-0.1.0-py3-none-any.whl
-python -m pip install dist/dqt_executor_spark35-0.1.0-py3-none-any.whl
+python -m pip install dist/nativedq-0.1.0-py3-none-any.whl
+python -m pip install dist/nativedq_executor_spark35-0.1.0-py3-none-any.whl
 ```
 
 Verify discovery:
 
 ```bash
-python -c "from dqt.runtime.loaders import discover_executors; print(discover_executors())"
+python -c "from nativedq.runtime.loaders import discover_executors; print(discover_executors())"
 ```
 
 ## Optional extras
 
 | Extra | Install command | Enables |
 | --- | --- | --- |
-| `dqt[benchmark]` | `pip install "dqt[benchmark]"` | `dqt.benchmark.*` |
-| `dqt-executor-spark35[benchmark]` | `pip install "dqt-executor-spark35[benchmark]"` | Adapter benchmark modules |
+| `nativedq[benchmark]` | `pip install "nativedq[benchmark]"` | `nativedq.benchmark.*` |
+| `nativedq-executor-spark35[benchmark]` | `pip install "nativedq-executor-spark35[benchmark]"` | Adapter benchmark modules |
 
-The adapter's `benchmark` extra includes `dqt[benchmark]` and `pytest`.
+The adapter's `benchmark` extra includes `nativedq[benchmark]` and `pytest`.
 
 ## Distribution-name caveat
 
-The `dqt` name on PyPI is owned by an unrelated project. Do not rely on
-resolving `dqt` from an index: use the workspace source mapping, a built wheel,
+The `nativedq` name on PyPI is owned by an unrelated project. Do not rely on
+resolving `nativedq` from an index: use the workspace source mapping, a built wheel,
 or a local path. See the [packaging standard](../standards/packaging.md#known-packaging-risks).

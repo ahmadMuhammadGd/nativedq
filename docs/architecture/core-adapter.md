@@ -8,16 +8,16 @@ reverse.
 Consumer / application
         │
         ▼
-      dqt  (core: models, contracts, results, plugin loading, ODCS parsing)
+      nativedq  (core: models, contracts, results, plugin loading, ODCS parsing)
         ▲
         │
-dqt-executor-spark35  (adapter: Spark 3.5 execution)
+nativedq-executor-spark35  (adapter: Spark 3.5 execution)
         │
         ▼
      pyspark
 ```
 
-## The core package (`dqt`)
+## The core package (`nativedq`)
 
 Responsibilities:
 
@@ -25,7 +25,7 @@ Responsibilities:
 - Executor and strategy abstractions (`DQExecutor`, `DQExecutorConfig`,
   `DQExecutionStrategy`).
 - Result models (`DQExecutionResult`, `DQTestResult`).
-- Executor discovery through the `dqt.executors` entry-point group.
+- Executor discovery through the `nativedq.executors` entry-point group.
 - ODCS contract loading, structural validation, rule resolution, and execution
   orchestration.
 - Optional benchmark harness, installed only through the `benchmark` extra.
@@ -43,16 +43,16 @@ Boundaries:
 
 Adapters implement the core's contracts for one engine or integration.
 
-Current adapter: `dqt-executor-spark35`.
+Current adapter: `nativedq-executor-spark35`.
 
 Responsibilities:
 
-- Depend on `dqt` within a compatible version range and declare `pyspark` as
+- Depend on `nativedq` within a compatible version range and declare `pyspark` as
   its own runtime dependency.
 - Compile `DQTest` definitions into native engine expressions.
 - Execute tests, preserve row-level failure attribution, and resolve per-test
   result metrics.
-- Register an executor under the `dqt.executors` entry-point group.
+- Register an executor under the `nativedq.executors` entry-point group.
 
 Boundaries:
 
@@ -67,17 +67,17 @@ Boundaries:
 Executors are discovered from installed distributions at runtime:
 
 ```python
-from dqt.runtime.loaders import discover_executors, load_executor
+from nativedq.runtime.loaders import discover_executors, load_executor
 
 discover_executors()          # {"spark35": Spark35Executor, ...}
 load_executor("spark35", config)
 ```
 
-The entry-point group is `dqt.executors`. The Spark adapter declares:
+The entry-point group is `nativedq.executors`. The Spark adapter declares:
 
 ```toml
-[project.entry-points."dqt.executors"]
-spark35 = "dqt_spark35_executor:Spark35Executor"
+[project.entry-points."nativedq.executors"]
+spark35 = "nativedq_spark35_executor:Spark35Executor"
 ```
 
 Duplicate names in the group raise an error, and an unknown name raises an
@@ -91,8 +91,8 @@ not pull an engine or an integration library:
 
 | Distribution | Extra | Purpose |
 | --- | --- | --- |
-| `dqt` | `benchmark` | `matplotlib`, `pyspark`, `requests` for `dqt.benchmark` |
-| `dqt-executor-spark35` | `benchmark` | `dqt[benchmark]` and `pytest` for the adapter's benchmark modules |
+| `nativedq` | `benchmark` | `matplotlib`, `pyspark`, `requests` for `nativedq.benchmark` |
+| `nativedq-executor-spark35` | `benchmark` | `nativedq[benchmark]` and `pytest` for the adapter's benchmark modules |
 
 See the [packaging standard](../standards/packaging.md) for exact dependency
 constraints and the [package documents](../packages/core.md) for public APIs.

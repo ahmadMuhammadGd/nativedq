@@ -17,7 +17,7 @@ results plus row-level failure information. See
 | --- | --- | --- |
 | Architecture | [Overview](architecture/overview.md) | Purpose, design goals, execution model, current status |
 | Architecture | [Core and adapters](architecture/core-adapter.md) | Package boundaries, dependency direction, plugin discovery |
-| Packages | [Core (`dqt`)](packages/core.md) | Core APIs, contracts, installation, limitations |
+| Packages | [Core (`nativedq`)](packages/core.md) | Core APIs, contracts, installation, limitations |
 | Packages | [Executor for Spark 3.5](packages/executor-spark35.md) | `Spark35Executor`, strategies, configuration |
 | Guides | [Installation](guides/installation.md) | Workspace setup and installing packages/extras |
 | Guides | [Usage](guides/usage.md) | Defining tests, executing them, ODCS example |

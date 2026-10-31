@@ -15,8 +15,8 @@ resolution-markers = [
 
 [manifest]
 members = [
-    "dqt",
-    "dqt-executor-spark35",
+    "nativedq",
+    "nativedq-executor-spark35",
 ]
 
 [manifest.dependency-groups]
@@ -380,58 +380,6 @@ wheels = [
 ]
 
 [[package]]
-name = "dqt"
-version = "0.1.0"
-source = { editable = "packages/dqt-core" }
-dependencies = [
-    { name = "jsonschema" },
-    { name = "open-data-contract-standard" },
-    { name = "pydantic" },
-    { name = "pyyaml" },
-]
-
-[package.optional-dependencies]
-benchmark = [
-    { name = "matplotlib" },
-    { name = "requests" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "jsonschema", specifier = ">=4.19" },
-    { name = "matplotlib", marker = "extra == 'benchmark'", specifier = ">=3.11.1" },
-    { name = "open-data-contract-standard", specifier = ">=3.2.0,<3.3" },
-    { name = "pydantic", specifier = ">=2.13.4" },
-    { name = "pyyaml", specifier = ">=6.0" },
-    { name = "requests", marker = "extra == 'benchmark'", specifier = ">=2.32" },
-]
-provides-extras = ["benchmark"]
-
-[[package]]
-name = "dqt-executor-spark35"
-version = "0.1.0"
-source = { editable = "packages/dqt-spark35-executor" }
-dependencies = [
-    { name = "dqt" },
-    { name = "pyspark" },
-]
-
-[package.optional-dependencies]
-benchmark = [
-    { name = "dqt", extra = ["benchmark"] },
-    { name = "pytest" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "dqt", editable = "packages/dqt-core" },
-    { name = "dqt", extras = ["benchmark"], marker = "extra == 'benchmark'", editable = "packages/dqt-core" },
-    { name = "pyspark", specifier = ">=3.5,<3.6" },
-    { name = "pytest", marker = "extra == 'benchmark'", specifier = ">=9.1.1" },
-]
-provides-extras = ["benchmark"]
-
-[[package]]
 name = "executing"
 version = "2.2.1"
 source = { registry = "https://pypi.org/simple" }
@@ -785,6 +733,58 @@ sdist = { url = "https://files.pythonhosted.org/packages/a2/6e/371856a3fb9d31ca8
 wheels = [
     { url = "https://files.pythonhosted.org/packages/79/7b/2c79738432f5c924bef5071f933bcc9efd0473bac3b4aa584a6f7c1c8df8/mypy_extensions-1.1.0-py3-none-any.whl", hash = "sha256:1be4cccdb0f2482337c4743e60421de3a356cd97508abadd57d47403e94f5505", size = 4963, upload-time = "2025-04-22T14:54:22.983Z" },
 ]
+
+[[package]]
+name = "nativedq"
+version = "0.1.0"
+source = { editable = "packages/nativedq-core" }
+dependencies = [
+    { name = "jsonschema" },
+    { name = "open-data-contract-standard" },
+    { name = "pydantic" },
+    { name = "pyyaml" },
+]
+
+[package.optional-dependencies]
+benchmark = [
+    { name = "matplotlib" },
+    { name = "requests" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "jsonschema", specifier = ">=4.19" },
+    { name = "matplotlib", marker = "extra == 'benchmark'", specifier = ">=3.11.1" },
+    { name = "open-data-contract-standard", specifier = ">=3.2.0,<3.3" },
+    { name = "pydantic", specifier = ">=2.13.4" },
+    { name = "pyyaml", specifier = ">=6.0" },
+    { name = "requests", marker = "extra == 'benchmark'", specifier = ">=2.32" },
+]
+provides-extras = ["benchmark"]
+
+[[package]]
+name = "nativedq-executor-spark35"
+version = "0.1.0"
+source = { editable = "packages/nativedq-spark35-executor" }
+dependencies = [
+    { name = "nativedq" },
+    { name = "pyspark" },
+]
+
+[package.optional-dependencies]
+benchmark = [
+    { name = "nativedq", extra = ["benchmark"] },
+    { name = "pytest" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "nativedq", editable = "packages/nativedq-core" },
+    { name = "nativedq", extras = ["benchmark"], marker = "extra == 'benchmark'", editable = "packages/nativedq-core" },
+    { name = "pyspark", specifier = ">=3.5,<3.6" },
+    { name = "pytest", marker = "extra == 'benchmark'", specifier = ">=9.1.1" },
+]
+provides-extras = ["benchmark"]
 
 [[package]]
 name = "nest-asyncio2"

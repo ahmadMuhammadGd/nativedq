@@ -1,6 +1,10 @@
-# DQT
+# nativedq
 
-DQT is an open-source data quality framework that validates data where it is
+<p align="center">
+  <img src="./docs/assets/logo.png" alt="NativeDQ logo" />
+</p>
+
+nativedq is an open-source data quality framework that validates data where it is
 processed. Quality tests are written with the execution engine's native
 expressions, executed by an engine adapter, and reported as per-test results
 plus row-level failure information.
@@ -8,7 +12,7 @@ plus row-level failure information.
 ## Key capabilities
 
 - **Native tests** — define checks as ordinary Python functions decorated with
-  `@dq_test`; test bodies use PySpark expressions, not a DQT-specific DSL.
+  `@dq_test`; test bodies use PySpark expressions, not a nativedq-specific DSL.
 - **Execute where the data lives** — the Spark 3.5 adapter runs tests against
   an existing DataFrame without moving data to another system.
 - **Row-level attribution** — bitmap columns record which rows failed and which
@@ -17,7 +21,7 @@ plus row-level failure information.
   percentage computed with a single aggregation per execution.
 - **ODCS contracts** — execute ODCS v3.2.0 custom quality rules that reference
   `@dq_test` implementations by Python import path.
-- **Pluggable executors** — adapters register through the `dqt.executors`
+- **Pluggable executors** — adapters register through the `nativedq.executors`
   entry-point group.
 
 The core installs and imports without an execution engine.
@@ -35,9 +39,9 @@ uv run python examples/odcs/run_example.py
 A minimal test and execution:
 
 ```python
-from dqt import dq_test
-from dqt.runtime.loaders import load_executor
-from dqt_spark35_executor import Spark35ExecutorConfig
+from nativedq import dq_test
+from nativedq.runtime.loaders import load_executor
+from nativedq_spark35_executor import Spark35ExecutorConfig
 from pyspark.sql import functions as F
 
 
@@ -57,10 +61,10 @@ result = executor.run(tests=[positive], resolve=True)
         Application
              │
              ▼
-     dqt  (core: tests, results, contracts, plugin loading)
+     nativedq  (core: tests, results, contracts, plugin loading)
              ▲
              │
-dqt-executor-spark35  (adapter: Spark 3.5 execution)
+nativedq-executor-spark35  (adapter: Spark 3.5 execution)
              │
              ▼
           pyspark
@@ -72,15 +76,15 @@ The core never imports an adapter. See
 ## Available adapters
 
 Adapters provide execution for one engine and register through the
-`dqt.executors` entry-point group. The core installs without any of them.
+`nativedq.executors` entry-point group. The core installs without any of them.
 
 | Adapter | Engine | Package | Entry point |
 | --- | --- | --- | --- |
-| Spark 3.5 executor | PySpark `>=3.5,<3.6` | `dqt-executor-spark35` | `spark35` |
+| Spark 3.5 executor | PySpark `>=3.5,<3.6` | `nativedq-executor-spark35` | `spark35` |
 
 Spark 3.5 is the only adapter in this repository. Install it with the
 workspace (`uv sync`) or from a built wheel; installing from an index is not
-supported while the `dqt` distribution name is unresolved. See
+supported while the `nativedq` distribution name is unresolved. See
 [Installation](docs/guides/installation.md) and the
 [Spark 3.5 executor documentation](docs/packages/executor-spark35.md).
 

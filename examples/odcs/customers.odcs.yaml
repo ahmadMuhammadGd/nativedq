@@ -14,7 +14,7 @@ schema:
     quality:
       - id: customer_email_not_null
         type: custom
-        engine: dqt
+        engine: nativedq
         implementation: quality.not_null
         description: Every customer needs an email address.
         dimension: completeness
@@ -35,7 +35,7 @@ schema:
         quality:
           - id: customer_age_positive
             type: custom
-            engine: dqt
+            engine: nativedq
             implementation: quality.positive
             description: Age must be positive when present.
             dimension: accuracy

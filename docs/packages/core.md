@@ -1,8 +1,8 @@
-# Core package: `dqt`
+# Core package: `nativedq`
 
 ## Purpose and architectural role
 
-`dqt` is the engine-independent core of DQT. It defines quality tests, the
+`nativedq` is the engine-independent core of DQT. It defines quality tests, the
 executor and strategy contracts, result models, executor discovery, and the
 ODCS contract integration. Execution engines are provided by separate adapter
 packages. See [Core and adapter architecture](../architecture/core-adapter.md).
@@ -15,11 +15,11 @@ Responsibilities:
 - Argument binding and per-call threshold carrier (`DQTestCall`).
 - Executor and strategy abstract base classes.
 - Result models: `DQExecutionResult` and `DQTestResult`.
-- Runtime discovery of installed executors through the `dqt.executors`
+- Runtime discovery of installed executors through the `nativedq.executors`
   entry-point group.
 - ODCS v3.2.0 contract loading, validation, rule resolution, and execution
   orchestration.
-- An optional benchmark harness (`dqt.benchmark`) for measuring executor
+- An optional benchmark harness (`nativedq.benchmark`) for measuring executor
   strategies.
 
 Boundaries:
@@ -48,7 +48,7 @@ Optional extra:
 
 | Extra | Adds | Needed for |
 | --- | --- | --- |
-| `benchmark` | `matplotlib`, `pyspark`, `requests` | importing or running `dqt.benchmark.*` |
+| `benchmark` | `matplotlib`, `pyspark`, `requests` | importing or running `nativedq.benchmark.*` |
 
 Installing the core does not install an execution engine or discover an
 executor. See the [installation guide](../guides/installation.md) for build and
@@ -60,11 +60,11 @@ install commands.
 
 | API | Module | Description |
 | --- | --- | --- |
-| `dq_test(...)` | `dqt` / `dqt.decorators` | decorator that wraps a callable in `DQTest` |
-| `DQTest` | `dqt.definitions` | pydantic model holding `func`, `name`, `description`, `target_engine` |
+| `dq_test(...)` | `nativedq` / `nativedq.decorators` | decorator that wraps a callable in `DQTest` |
+| `DQTest` | `nativedq.definitions` | pydantic model holding `func`, `name`, `description`, `target_engine` |
 | `DQTest.test_parameters` | computed | `DQTestParameter` list derived from the function signature |
 | `DQTest.__call__` | | binds arguments and returns a `DQTestCall` |
-| `DQTestCall` | `dqt.models` | bound call carrying parameter values and `maximum_accepted_error_percentage` (default 100) |
+| `DQTestCall` | `nativedq.models` | bound call carrying parameter values and `maximum_accepted_error_percentage` (default 100) |
 
 The decorator does not register tests globally. Using it as
 `@dq_test` wraps the function immediately; `@dq_test(name=..., description=...,
@@ -78,11 +78,11 @@ arguments and a threshold.
 
 | API | Module | Description |
 | --- | --- | --- |
-| `DQExecutor[T]` | `dqt.abc.dqt_execute` | abstract `run(df, tests, resolve=False) -> DQExecutionResult[T]` |
-| `DQExecutorConfig` | `dqt.abc.dqt_execute` | pydantic base model with arbitrary types allowed |
-| `DQExecutionStrategy[T]` | `dqt.abc.dqt_execution_strategy` | abstract `execute(...)` and `resolve(...)` |
-| `DQExecutionResult[T]` | `dqt.execution` | `uuid`, `test_results`, `result_df`, `metadata` |
-| `DQTestResult` | `dqt.execution` | `test`, `status` (`PASS`/`FAILED`), `failed_percentage`, `failed_rows`, `evaluated_rows` |
+| `DQExecutor[T]` | `nativedq.abc.dq_execute` | abstract `run(df, tests, resolve=False) -> DQExecutionResult[T]` |
+| `DQExecutorConfig` | `nativedq.abc.dq_execute` | pydantic base model with arbitrary types allowed |
+| `DQExecutionStrategy[T]` | `nativedq.abc.dq_execution_strategy` | abstract `execute(...)` and `resolve(...)` |
+| `DQExecutionResult[T]` | `nativedq.execution` | `uuid`, `test_results`, `result_df`, `metadata` |
+| `DQTestResult` | `nativedq.execution` | `test`, `status` (`PASS`/`FAILED`), `failed_percentage`, `failed_rows`, `evaluated_rows` |
 
 `DQTestResult.status` is `FAILED` when `failed_percentage` is strictly greater
 than the test's `maximum_accepted_error_percentage`; equality passes.
@@ -93,21 +93,21 @@ tests.
 
 | API | Module | Description |
 | --- | --- | --- |
-| `EXECUTOR_ENTRY_POINT_GROUP` | `dqt.runtime.loaders` | `"dqt.executors"` |
-| `discover_executors()` | `dqt.runtime.loaders` | returns `{name: executor_class}`; raises on duplicate names |
-| `load_executor(name, config)` | `dqt.runtime.loaders` | instantiates a discovered executor; raises with available names when unknown |
+| `EXECUTOR_ENTRY_POINT_GROUP` | `nativedq.runtime.loaders` | `"nativedq.executors"` |
+| `discover_executors()` | `nativedq.runtime.loaders` | returns `{name: executor_class}`; raises on duplicate names |
+| `load_executor(name, config)` | `nativedq.runtime.loaders` | instantiates a discovered executor; raises with available names when unknown |
 
 To add an executor, implement `DQExecutor` (and optionally
 `DQExecutionStrategy`) in an adapter package and register it:
 
 ```toml
-[project.entry-points."dqt.executors"]
+[project.entry-points."nativedq.executors"]
 my_engine = "my_package:MyExecutor"
 ```
 
 ### ODCS integration
 
-Exported from `dqt.odcs`:
+Exported from `nativedq.odcs`:
 
 - `ODCSContract` (`load(path)`, `from_string(text, source=None)`,
   `quality_rules()`).
@@ -127,7 +127,7 @@ Defining and binding a test:
 ```python
 from functools import partial
 
-from dqt import dq_test
+from nativedq import dq_test
 from pyspark.sql import functions as F
 
 
@@ -148,8 +148,8 @@ print(call.maximum_accepted_error_percentage)  # 5
 Running through a discovered adapter:
 
 ```python
-from dqt.runtime.loaders import load_executor
-from dqt_spark35_executor import Spark35ExecutorConfig
+from nativedq.runtime.loaders import load_executor
+from nativedq_spark35_executor import Spark35ExecutorConfig
 
 executor = load_executor("spark35", Spark35ExecutorConfig(df=source_df))
 result = executor.run(tests=[positive_value], resolve=True)
@@ -170,9 +170,9 @@ documented in [Configuration](../reference/configuration.md).
 
 Constants:
 
-- `EXECUTOR_ENTRY_POINT_GROUP = "dqt.executors"`.
+- `EXECUTOR_ENTRY_POINT_GROUP = "nativedq.executors"`.
 - `SUPPORTED_ODCS_VERSION = "v3.2.0"`.
-- `DQT_ENGINE = "dqt"` and `MAXIMUM_ACCEPTED_ERROR_PROPERTY =
+- `DQT_ENGINE = "nativedq"` and `MAXIMUM_ACCEPTED_ERROR_PROPERTY =
   "maximum_accepted_error_percentage"` in the ODCS resolver.
 
 ## Compatibility constraints
@@ -181,13 +181,13 @@ Constants:
 - Pydantic v2 models.
 - ODCS v3.2.0 only; the dependency is bounded below `<3.3` because the bundled
   schema is authoritative.
-- Core version is `0.1.0`; adapters declare `dqt>=0.1,<0.2`. A breaking core
+- Core version is `0.1.0`; adapters declare `nativedq>=0.1,<0.2`. A breaking core
   change requires a matching adapter range update.
 
 ## Testing and development
 
 ```bash
-uv run pytest packages/dqt-core/src/tests
+uv run pytest packages/nativedq-core/src/tests
 ```
 
 Core tests use pytest and do not require Spark or an adapter. The repository's
@@ -209,7 +209,7 @@ adapter for the example and integration tests. See the
 - `target_engine` is metadata on `DQTest`; the core does not enforce it.
 - Parameter annotations are exposed as `DQTestParameter` metadata but are not
   validated.
-- `dqt.benchmark` is an internal benchmark harness, is not part of the stable
+- `nativedq.benchmark` is an internal benchmark harness, is not part of the stable
   public API, and requires the `benchmark` extra.
-- The ODCS integration executes only `type: custom` rules with `engine: dqt`;
+- The ODCS integration executes only `type: custom` rules with `engine: nativedq`;
   other rule types are rejected rather than skipped.

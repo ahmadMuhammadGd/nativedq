@@ -4,10 +4,10 @@ import os
 import sys
 from pathlib import Path
 
-from dqt.odcs import ODCSContract, execute_contract
-from dqt.runtime.loaders import load_executor
+from nativedq.odcs import ODCSContract, execute_contract
+from nativedq.runtime.loaders import load_executor
 
-from dqt_spark35_executor import Spark35ExecutorConfig
+from nativedq_spark35_executor import Spark35ExecutorConfig
 from pyspark.sql import SparkSession
 
 HERE = Path(__file__).resolve().parent
@@ -24,7 +24,7 @@ def main() -> None:
 
     spark = (
         SparkSession.builder.master("local[1]")
-        .appName("dqt-odcs-example")
+        .appName("nativedq-odcs-example")
         .config("spark.ui.enabled", "false")
         .getOrCreate()
     )
@@ -46,7 +46,7 @@ def main() -> None:
         """
         You can also import executor directly
 
-        from dqt_spark35_executor import Spark35Executor
+        from nativedq_spark35_executor import Spark35Executor
         spark_executor = Spark35Executor(Spark35ExecutorConfig(df=df))
         """
 

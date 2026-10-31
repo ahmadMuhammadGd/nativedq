@@ -38,8 +38,8 @@ durable rationale.
 Every Python package in `packages/` must have a corresponding document in
 `docs/packages/`, named after the package without its prefix:
 
-- `packages/dqt-core/` → `docs/packages/core.md`
-- `packages/dqt-executor-spark35/` → `docs/packages/executor-spark35.md`
+- `packages/nativedq-core/` → `docs/packages/core.md`
+- `packages/nativedq-executor-spark35/` → `docs/packages/executor-spark35.md`
 - A new package requires its document in the same change.
 
 Each package document covers, where applicable:

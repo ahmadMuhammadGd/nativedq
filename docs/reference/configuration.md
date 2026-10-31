@@ -4,17 +4,17 @@
 
 The core package has no runtime configuration options. Executors provide their
 own configuration by subclassing `DQExecutorConfig`
-(`dqt.abc.dqt_execute`).
+(`nativedq.abc.dq_execute`).
 
 | Constant | Value | Meaning |
 | --- | --- | --- |
-| `EXECUTOR_ENTRY_POINT_GROUP` | `dqt.executors` | entry-point group scanned by `discover_executors()` |
+| `EXECUTOR_ENTRY_POINT_GROUP` | `nativedq.executors` | entry-point group scanned by `discover_executors()` |
 | `SUPPORTED_ODCS_VERSION` | `v3.2.0` | only supported ODCS `apiVersion` |
-| `DQT_ENGINE` | `dqt` | required ODCS rule `engine` value |
+| `DQT_ENGINE` | `nativedq` | required ODCS rule `engine` value |
 
 ## Spark 3.5 executor
 
-`dqt_spark35_executor.Spark35ExecutorConfig` fields:
+`nativedq_spark35_executor.Spark35ExecutorConfig` fields:
 
 | Field | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -80,17 +80,17 @@ rule mapping; see the [ODCS results section](odcs.md#results).
 ## Loading executors
 
 ```python
-from dqt.runtime.loaders import discover_executors, load_executor
+from nativedq.runtime.loaders import discover_executors, load_executor
 
 discover_executors()  # {"spark35": Spark35Executor}
 executor = load_executor("spark35", config)
 ```
 
-- The entry-point group is `dqt.executors`.
+- The entry-point group is `nativedq.executors`.
 - Duplicate entry-point names raise `ValueError`.
 - An unknown executor name raises `ValueError` listing available names.
 - The core installs with no executors; installing
-  `dqt-executor-spark35` registers `spark35`.
+  `nativedq-executor-spark35` registers `spark35`.
 
 ## Environment
 

@@ -7,7 +7,7 @@ returns a native engine expression; DQT does not interpret a separate rule
 language.
 
 ```python
-from dqt import dq_test
+from nativedq import dq_test
 from pyspark.sql import functions as F
 
 
@@ -28,7 +28,7 @@ or bind them with `functools.partial` before executing directly:
 ```python
 from functools import partial
 
-from dqt import dq_test
+from nativedq import dq_test
 
 age_positive = dq_test(name="age_positive")(partial(positive.func, column="age"))
 ```
@@ -40,9 +40,9 @@ When tests are referenced from an ODCS contract, the contract's
 ## Execute tests with Spark
 
 ```python
-from dqt.runtime.loaders import load_executor
-from dqt_spark35_executor import Spark35ExecutorConfig
-from dqt_spark35_executor.executor import Spark35ExecutorStrategies
+from nativedq.runtime.loaders import load_executor
+from nativedq_spark35_executor import Spark35ExecutorConfig
+from nativedq_spark35_executor.executor import Spark35ExecutorStrategies
 
 executor = load_executor(
     "spark35",
@@ -84,9 +84,9 @@ that row.
 ## Execute an ODCS contract
 
 ```python
-from dqt.odcs import ODCSContract, execute_contract
-from dqt.runtime.loaders import load_executor
-from dqt_spark35_executor import Spark35ExecutorConfig
+from nativedq.odcs import ODCSContract, execute_contract
+from nativedq.runtime.loaders import load_executor
+from nativedq_spark35_executor import Spark35ExecutorConfig
 
 contract = ODCSContract.load("customers.odcs.yaml")
 executor = load_executor("spark35", Spark35ExecutorConfig(df=source_df))
@@ -103,7 +103,7 @@ of the supported subset, metadata, and error handling are in the
 To resolve rules without executing them:
 
 ```python
-from dqt.odcs import resolve_tests
+from nativedq.odcs import resolve_tests
 
 tests = resolve_tests(contract)
 ```
@@ -128,7 +128,7 @@ custom-rule fields:
 
 ```yaml
 type: custom
-engine: dqt
+engine: nativedq
 implementation: quality.not_null
 ```
 

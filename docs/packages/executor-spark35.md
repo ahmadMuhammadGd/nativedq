@@ -1,8 +1,8 @@
-# Adapter package: `dqt-executor-spark35`
+# Adapter package: `nativedq-executor-spark35`
 
 ## Purpose and architectural role
 
-`dqt-executor-spark35` executes DQT quality tests against PySpark 3.5
+`nativedq-executor-spark35` executes DQT quality tests against PySpark 3.5
 DataFrames. It is the engine-specific half of DQT: the core defines tests,
 results, and contracts, and this adapter compiles tests into Spark expressions,
 runs them, and reports per-test metrics and row-level failures.
@@ -21,11 +21,11 @@ Responsibilities:
   failure counts.
 - Provide three execution strategies: bitmap array, bitmap column, and direct
   resolve.
-- Register `spark35` in the `dqt.executors` entry-point group.
+- Register `spark35` in the `nativedq.executors` entry-point group.
 
 Boundaries:
 
-- Depends on `dqt` for all test, result, and contract types; contains no
+- Depends on `nativedq` for all test, result, and contract types; contains no
   contract parsing.
 - Depends on `pyspark` for execution. The core does not import this package.
 - Does not persist results or publish metrics; it returns `DQExecutionResult`
@@ -37,14 +37,14 @@ Boundaries:
 
 | Dependency | Constraint | Purpose |
 | --- | --- | --- |
-| `dqt` | `>=0.1,<0.2` | core contracts and models |
+| `nativedq` | `>=0.1,<0.2` | core contracts and models |
 | `pyspark` | `>=3.5,<3.6` | Spark 3.5 runtime |
 
 Optional extra:
 
 | Extra | Adds | Needed for |
 | --- | --- | --- |
-| `benchmark` | `dqt[benchmark]`, `pytest` | importing/running `dqt_spark35_executor.benchmark.*` |
+| `benchmark` | `nativedq[benchmark]`, `pytest` | importing/running `nativedq_spark35_executor.benchmark.*` |
 
 Spark requires a JVM. The repository's tests and example were verified with
 Java 17. See the [installation guide](../guides/installation.md).
@@ -53,9 +53,9 @@ Java 17. See the [installation guide](../guides/installation.md).
 
 | API | Module | Description |
 | --- | --- | --- |
-| `Spark35Executor` | `dqt_spark35_executor` | `DQExecutor[DataFrame]` implementation |
-| `Spark35ExecutorConfig` | `dqt_spark35_executor` | configuration model and strategy factory |
-| `Spark35ExecutorStrategies` | `dqt_spark35_executor.executor` | enum of `BITMAP_ARRAY`, `BITMAP_COLUMN`, `DIRECT_RESOLVE` |
+| `Spark35Executor` | `nativedq_spark35_executor` | `DQExecutor[DataFrame]` implementation |
+| `Spark35ExecutorConfig` | `nativedq_spark35_executor` | configuration model and strategy factory |
+| `Spark35ExecutorStrategies` | `nativedq_spark35_executor.executor` | enum of `BITMAP_ARRAY`, `BITMAP_COLUMN`, `DIRECT_RESOLVE` |
 | `BitMapArrayStrategy` | `...strategies` | default strategy, one `_dq_violations` array column |
 | `BitMapColumnStrategy` | `...strategies` | one bitmap column per 63-bit chunk |
 | `DirectResolveStrategy` | `...strategies` | direct aggregation without a failure column |
@@ -66,20 +66,20 @@ constructed.
 ### Entry point
 
 ```toml
-[project.entry-points."dqt.executors"]
-spark35 = "dqt_spark35_executor:Spark35Executor"
+[project.entry-points."nativedq.executors"]
+spark35 = "nativedq_spark35_executor:Spark35Executor"
 ```
 
-`dqt.runtime.loaders.load_executor("spark35", config)` instantiates the
+`nativedq.runtime.loaders.load_executor("spark35", config)` instantiates the
 executor after discovery.
 
 ## Usage
 
 ```python
-from dqt import dq_test
-from dqt.runtime.loaders import load_executor
-from dqt_spark35_executor import Spark35ExecutorConfig
-from dqt_spark35_executor.executor import Spark35ExecutorStrategies
+from nativedq import dq_test
+from nativedq.runtime.loaders import load_executor
+from nativedq_spark35_executor import Spark35ExecutorConfig
+from nativedq_spark35_executor.executor import Spark35ExecutorStrategies
 from pyspark.sql import functions as F
 
 
@@ -168,14 +168,14 @@ DataFrame for the caller to inspect or persist.
 
 - Python `>=3.12`.
 - PySpark `>=3.5,<3.6`; the distribution targets Spark 3.5 specifically.
-- Core `dqt>=0.1,<0.2`.
+- Core `nativedq>=0.1,<0.2`.
 - The strategies use Spark SQL functions (`element_at`, `shiftRight`,
   `bitwiseAND`, `bitwiseOR`, `array`), so Spark 3.5 semantics apply.
 
 ## Testing and development
 
 ```bash
-uv run pytest packages/dqt-spark35-executor/src/tests
+uv run pytest packages/nativedq-spark35-executor/src/tests
 ```
 
 Tests start a local Spark session and set `PYSPARK_PYTHON` /

@@ -1,4 +1,4 @@
-from dqt import dq_test
+from nativedq import dq_test
 from pyspark.sql import functions as F
 
 

@@ -70,10 +70,10 @@ models is currently the caller's responsibility.
 | --- | --- |
 | `@dq_test` definitions and call binding | Implemented in core |
 | Executor abstraction and entry-point discovery | Implemented in core |
-| Spark 3.5 executor with three strategies | Implemented in `dqt-executor-spark35` |
+| Spark 3.5 executor with three strategies | Implemented in `nativedq-executor-spark35` |
 | Per-test result metrics and threshold handling | Implemented in the Spark executor |
 | Row-to-test attribution via bitmap columns | Implemented in the Spark executor |
-| ODCS v3.2.0 contract execution | Implemented in core (`dqt.odcs`) |
+| ODCS v3.2.0 contract execution | Implemented in core (`nativedq.odcs`) |
 | Persisted metric/artifact schema and artifact integrations | Not implemented |
 | Additional execution engines | Not implemented |
 

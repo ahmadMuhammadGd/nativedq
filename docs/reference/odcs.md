@@ -44,7 +44,7 @@ schema:
     quality:
       - id: value_positive
         type: custom
-        engine: dqt
+        engine: nativedq
         implementation: my_project.quality.value_positive
         customProperties:
           - property: column
@@ -57,7 +57,7 @@ schema:
         quality:
           - id: value_below_hundred
             type: custom
-            engine: dqt
+            engine: nativedq
             implementation: my_project.quality.value_below_hundred
             customProperties:
               - property: column
@@ -73,15 +73,15 @@ An executable rule must use the standard ODCS custom quality-rule fields:
 
 ```yaml
 type: custom
-engine: dqt
+engine: nativedq
 implementation: <python.module>.<attribute>
 ```
 
 `implementation` resolves to an object that is already an instance of
-`dqt.DQTest`, i.e. a function defined with the existing `@dq_test` decorator:
+`nativedq.DQTest`, i.e. a function defined with the existing `@dq_test` decorator:
 
 ```python
-from dqt import dq_test
+from nativedq import dq_test
 from pyspark.sql import functions as F
 
 
@@ -122,8 +122,8 @@ execution.
 ## Execution
 
 ```python
-from dqt.odcs import ODCSContract, execute_contract
-from dqt_spark35_executor import Spark35Executor, Spark35ExecutorConfig
+from nativedq.odcs import ODCSContract, execute_contract
+from nativedq_spark35_executor import Spark35Executor, Spark35ExecutorConfig
 
 contract = ODCSContract.load("customers.odcs.yaml")
 executor = Spark35Executor(Spark35ExecutorConfig(df=source_df))
@@ -140,7 +140,7 @@ result resolution.
 To resolve rules without running them:
 
 ```python
-from dqt.odcs import resolve_tests
+from nativedq.odcs import resolve_tests
 
 tests = resolve_tests(contract)  # list[ContractDQTest]
 ```
@@ -175,7 +175,7 @@ engine errors propagate instead of being reported as passes.
 
 Supported:
 
-- `type: custom` with `engine: dqt` and a string `implementation` that
+- `type: custom` with `engine: nativedq` and a string `implementation` that
   resolves to an `@dq_test` definition.
 - Rules at schema-object and schema-property level.
 - Multiple rules and repeated implementations.
@@ -183,7 +183,7 @@ Supported:
 Rejected with an actionable `ContractRuleError` (never silently skipped):
 
 - `text`, `library`, and `sql` rules.
-- Custom rules whose `engine` is not `dqt`.
+- Custom rules whose `engine` is not `nativedq`.
 - Missing or non-string `implementation`.
 - Missing module, missing attribute, undecorated function, or any object that
   is not a `DQTest`.
@@ -223,10 +223,10 @@ validation uses the `schema.json` bundled with the installed
 `open-data-contract-standard` release. To add an upcoming version:
 
 1. Upgrade `open-data-contract-standard` in
-   `packages/dqt-core/pyproject.toml` to the release that publishes the new
+   `packages/nativedq-core/pyproject.toml` to the release that publishes the new
    schema, and refresh the lockfile.
 2. Append the new `apiVersion` to `_SUPPORTED_ODCS_VERSIONS` in
-   `dqt/odcs/contract.py` (and set `SUPPORTED_ODCS_VERSION` to the newest
+   `nativedq/odcs/contract.py` (and set `SUPPORTED_ODCS_VERSION` to the newest
    version).
 3. Re-run the contract and Spark integration tests; schema changes may require
    updating the fixtures and the documented supported subset.
@@ -239,6 +239,6 @@ contain `v3.2.0`-specific branches.
 
 ## Related documents
 
-- [Core package](../packages/core.md) — `dqt.odcs` public APIs.
+- [Core package](../packages/core.md) — `nativedq.odcs` public APIs.
 - [Usage](../guides/usage.md) — contract execution example.
 - [ODCS example](../../examples/odcs/) — runnable end-to-end example.

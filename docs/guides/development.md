@@ -4,8 +4,8 @@
 
 ```text
 pyproject.toml                  virtual uv workspace root
-packages/dqt-core/              core distribution `dqt`
-packages/dqt-spark35-executor/  adapter distribution `dqt-executor-spark35`
+packages/nativedq-core/              core distribution `nativedq`
+packages/nativedq-spark35-executor/  adapter distribution `nativedq-executor-spark35`
 examples/odcs/                  runnable ODCS example
 docs/                           all project documentation
 agents/                         agent task inputs (tooling, not project docs)
@@ -28,14 +28,14 @@ JVM; Java 17 was used for verification.
 Run both suites from the repository root:
 
 ```bash
-uv run pytest packages/dqt-core/src/tests packages/dqt-spark35-executor/src/tests
+uv run pytest packages/nativedq-core/src/tests packages/nativedq-spark35-executor/src/tests
 ```
 
 Or run one package:
 
 ```bash
-uv run pytest packages/dqt-core/src/tests
-uv run pytest packages/dqt-spark35-executor/src/tests
+uv run pytest packages/nativedq-core/src/tests
+uv run pytest packages/nativedq-spark35-executor/src/tests
 ```
 
 Core tests do not require Spark. Adapter tests start a local Spark session and
@@ -54,12 +54,12 @@ The expected output is documented in [Usage](usage.md#runnable-odcs-example).
 Build each distribution independently:
 
 ```bash
-uv build --package dqt
-uv build --package dqt-executor-spark35
+uv build --package nativedq
+uv build --package nativedq-executor-spark35
 ```
 
-Both use `hatchling`; the wheels contain only `dqt` and
-`dqt_spark35_executor` respectively. See the
+Both use `hatchling`; the wheels contain only `nativedq` and
+`nativedq_spark35_executor` respectively. See the
 [packaging standard](../standards/packaging.md).
 
 ## Linting and formatting
@@ -94,7 +94,7 @@ edits.
 
 1. Add the distribution under `packages/` and register it in the workspace
    (`members = ["packages/*"]` handles discovery).
-2. Keep the dependency direction: adapters depend on `dqt`, never the reverse.
+2. Keep the dependency direction: adapters depend on `nativedq`, never the reverse.
 3. Add `docs/packages/<package>.md` covering the sections required by the
    [documentation standard](../standards/documentation.md#package-documents).
 4. Link the new document from `docs/README.md`.

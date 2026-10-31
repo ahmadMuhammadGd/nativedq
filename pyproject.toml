@@ -2,7 +2,7 @@
 members = ["packages/*"]
 
 [tool.uv.sources]
-dqt = { workspace = true }
+nativedq = { workspace = true }
 
 [dependency-groups]
 dev = [
